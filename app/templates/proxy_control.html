@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>代理服务器控制</h1>
+
+{% if error %}
+    <div class="error">{{ error }}</div>
+{% endif %}
+
+<div class="server-status">
+    {% if server_status.running %}
+        <p>代理服务器正在运行。</p>
+        <p>地址: {{ server_status.address }}</p>
+        <p>端口: {{ server_status.port }}</p>
+    {% else %}
+        <p>代理服务器未启动。</p>
+    {% endif %}
+</div>
+
+<form action="/proxy_control/start" method="post">
+    <button type="submit" {% if server_status.running %}disabled{% endif %}>启动代理服务器</button>
+</form>
+
+<form action="/proxy_control/restart" method="post" style="margin-top: 20px;">
+    <button type="submit">重启代理服务器</button>
+</form>
+
+<form action="/proxy_control/stop" method="post" style="margin-top: 20px;">
+    <button type="submit" {% if not server_status.running %}disabled{% endif %}>停止代理服务器</button>
+</form>
+
+<a href="/static/ca.crt">下载浏览器证书</a>
+
+<hr>
+
+<h2>代理服务器配置</h2>
+<div class="config-section">
+    <pre>{{ config | tojson(indent=2) }}</pre>
+</div>
+
+<hr>
+
+
+
+{% endblock %}
+
+{% block styles %}
+<style>
+    /* 美化按钮 */
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button[disabled] {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+
+    /* 配置区样式 */
+    .config-section {
+        background-color: #f9f9f9;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    /* 日志区样式 */
+    .logs-section {
+        background-color: #f1f1f1;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .logs-list {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .logs-list li {
+        padding: 5px 0;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .logs-list li:last-child {
+        border-bottom: none;
+    }
+
+    /* 错误消息样式 */
+    .error {
+        color: red;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}

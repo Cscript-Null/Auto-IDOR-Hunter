@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>编辑匹配记录</h1>
+
+<!-- 表单，用于提交修改后的 matched_data -->
+<form method="post" action="/matches/edit/{{ match.id }}">
+    <label for="matched_data">匹配数据:</label>
+    
+    <!-- 显示可编辑的文本框 -->
+    <textarea id="matched_data" name="matched_data" rows="10" required>{{ match.matched_data }}</textarea>
+    
+    <button type="submit">保存</button>
+    <a href="/matches">取消</a>
+</form>
+
+<!-- 语法高亮显示 -->
+<h2>HTTP 报文预览</h2>
+<pre>
+    <code class="language-http" id="http-preview">{{ match.matched_data }}</code>
+</pre>
+
+<!-- Prism.js 用于语法高亮 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-http.min.js"></script>
+
+<script>
+// 实时更新 HTTP 报文预览
+document.getElementById("matched_data").addEventListener("input", function() {
+    document.getElementById("http-preview").textContent = this.value;
+    Prism.highlightElement(document.getElementById("http-preview"));
+});
+</script>
+
+{% endblock %}

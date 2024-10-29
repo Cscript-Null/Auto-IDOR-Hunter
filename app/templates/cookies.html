@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Cookie 凭据</h1>
+
+{% if error %}
+    <div class="error">{{ error }}</div>
+{% endif %}
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>时间戳</th>
+            <th>凭据</th>
+            <th>权限</th>
+            <th>用户</th>
+            <th>操作</th> <!-- 新增操作列 -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for cookie in cookies %}
+        <tr>
+            <td>{{ cookie.id }}</td>
+            <td>{{ cookie.timestamp }}</td>
+            <td>{{ cookie.credential }}</td>
+            <td>{{ cookie.permission }}</td>
+            <td>{{ cookie.user }}</td>
+            <td>
+                <!-- 删除按钮 -->
+                <form action="/cookies/delete/{{ cookie.id }}" method="post" style="display:inline;">
+                    <button type="submit" onclick="return confirm('确认删除此 Cookie?')">删除</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>添加新 Cookie</h2>
+<form action="/cookies/add" method="post">
+    <label for="credential">凭据:</label><br>
+    <textarea id="credential" name="credential" rows="4" cols="50" required></textarea><br><br>
+    
+    <label for="permission">权限:</label><br>
+    <input type="text" id="permission" name="permission" required><br><br>
+    
+    <label for="user">用户:</label><br>
+    <input type="text" id="user" name="user" required><br><br>
+    
+    <input type="submit" value="添加 Cookie">
+</form>
+{% endblock %}

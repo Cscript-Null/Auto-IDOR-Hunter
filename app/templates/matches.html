@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>匹配记录</h1>
+
+{% if error %}
+    <div class="error">{{ error }}</div>
+{% endif %}
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>时间戳</th>
+            <th>匹配数据</th>
+            <th>正则说明</th>
+            <th>标签</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for match in matches %}
+        <tr id="match-{{ match.id }}">
+            <td>{{ match.id }}</td>
+            <td>{{ match.timestamp }}</td>
+            <td>
+                <pre><code class="language-http">{{ match.matched_data | e }}</code></pre>
+            </td>
+            <td>{{ match.pattern_description }}</td>
+            <td>{{ match.tag }}</td>
+            <td>
+                <!-- 处理表单 -->
+                <form action="/matches/process/{{ match.id }}" method="post">
+                    <label for="user_cookie_ids">选择 Cookie:</label><br>
+                    <select name="user_cookie_ids" required>
+                        {% for cookie in cookies %}
+                        <option value="{{ cookie.id }}">{{ cookie.user }} - {{ cookie.permission }}</option>
+                        {% endfor %}
+                    </select><br><br>
+                    <input type="submit" value="处理">
+                </form>
+                <!-- 删除按钮 -->
+                <a href="/matches/edit/{{ match.id }}">编辑</a>
+                <form action="/matches/delete/{{ match.id }}" method="post" onsubmit="return confirm('确定要删除此匹配记录吗？');">
+                    <input type="submit" value="删除">
+                </form>
+                <!-- 新增：发送所有 Cookie 的按钮 -->
+                <button onclick="sendAllCookies({{ match.id }})">发送所有 Cookie</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- JavaScript 部分 -->
+<script>
+    function sendAllCookies(matchId) {
+        // 获取所有的 cookie IDs
+        const cookies = [
+            {% for cookie in cookies %}
+            {{ cookie.id }},
+            {% endfor %}
+        ];
+
+        // 遍历所有 cookie 并发送请求
+        cookies.forEach(cookieId => {
+            // 创建一个表单
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/matches/process/${matchId}`;
+
+            // 创建一个隐藏的 select 元素，用于提交 cookie ID
+            const select = document.createElement('select');
+            select.name = 'user_cookie_ids';
+            select.style.display = 'none';  // 隐藏 select 元素
+
+            // 创建一个 option 元素，并设置值为 cookie ID
+            const option = document.createElement('option');
+            option.value = cookieId;
+            option.selected = true;
+            select.appendChild(option);
+
+            // 将 select 元素添加到表单
+            form.appendChild(select);
+
+            // 将表单添加到文档中并提交
+            document.body.appendChild(form);
+            form.submit();
+        });
+    }
+</script>
+
+{% endblock %}

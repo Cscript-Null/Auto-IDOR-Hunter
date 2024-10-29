@@ -1,0 +1,48 @@
+{
+    "patterns": [
+        {
+            "pattern": "(\\b(?<!_)(id|\\w+id)=(\\d{2,15})\\b(?![-_\\\\/]))",
+            "description": "GET 明文id"
+        },
+        {
+            "pattern": "((?:'|\")?([a-zA-Z_]*[iI][dD])(?:'|\")?\\s*:\\s*(?:('|\")?(\\d{2,15})(?![a-zA-Z0-9_\\\\/-])('|\")?|\\s*(\\d{2,15})(?![a-zA-Z0-9_\\\\/-])))",
+            "description": "GET JSON id"
+        },
+        {
+            "pattern": "((?:%22|%27)?([a-zA-Z_]*id[a-zA-Z0-9.]*)(?:%22|%27)?\\s*(?:%3A|:)\\s*(?:%22|%27)?(\\d{2,15})(?!([a-zA-Z0-9_\\\\/-]))(?:%22|%27)?)",
+            "description": "GET JSON编码 id"
+        },
+        {
+            "pattern": "(\\b(?<!_)(id|\\w+id)=(\\d{2,15})\\b(?![-_\\\\/]))",
+            "description": "POST 明文id"
+        },
+        {
+            "pattern": "((?:'|\")?([a-zA-Z_]*[iI][dD])(?:'|\")?\\s*:\\s*(?:('|\")?(\\d{2,15})(?![a-zA-Z0-9_\\\\/-])('|\")?|\\s*(\\d{2,15})(?![a-zA-Z0-9_\\\\/-])))",
+            "description": "POST JSON id"
+        },
+        {
+            "pattern": "((?:%22|%27)?([a-zA-Z_]*id[a-zA-Z0-9.]*)(?:%22|%27)?\\s*(?:%3A|:)\\s*(?:%22|%27)?(\\d{2,15})(?!([a-zA-Z0-9_\\\\/-]))(?:%22|%27)?)",
+            "description": "POST JSON编码 id"
+        },
+        {
+            "pattern": "((swagger-ui.html)|(\\\"swagger\\\":)|(Swagger UI)|(swaggerUi)|(swaggerVersion))",
+            "description": "Swagger UI"
+        },
+        {
+            "pattern": "((|'|\")(|[\\w]{1,10})(([u](ser|name|sername))|(account)|((((create|update)((d|r)|(by|on|at)))|(creator))))(|[\\w]{1,10})(|'|\")(:|=)( |)('|\")(.*?)('|\")(|,))",
+            "description": "用户名"
+        },
+        {
+            "pattern": "([^/\\s]+?)/(\\d+)\\sHTTP",
+            "description": "路由"
+        }
+    ]
+    ,
+    "listen_port": 8888,
+    "ca_key": "ca.key",
+    "ca_cert": "ca.crt",
+    "database": "matches.db",
+    "api_key": "sk-NGNRxRkYesCmsPuCqWYW7w6m6kSHij8bBFjcsJ15GaPF7aRF",
+    "base_url": "https://api.moonshot.cn/v1/",
+    "save_js": false
+}

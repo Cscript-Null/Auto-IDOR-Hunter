@@ -1,0 +1,18 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>检查结果</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h1>ProcessedMatch ID: {{ processed_match.id }} 检查结果</h1>
+    <p><strong>是否存在越权漏洞:</strong> {{ "是" if processed_match.is_vulnerable else "否" }}</p>
+    {% if processed_match.vulnerability_reason %}
+    <p><strong>原因:</strong> {{ processed_match.vulnerability_reason }}</p>
+    {% endif %}
+    <a href="/check">返回检查列表</a> | <a href="/">返回首页</a>
+</body>
+{% endblock %}

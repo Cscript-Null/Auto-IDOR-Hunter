@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>JavaScript 文件详情</h2>
+
+<h3>文件路径: {{ js_file.path }}</h3>
+<h4>所属服务器: {{ js_file.host if js_file.host else "未知" }}</h4>
+
+<h3>文件内容：</h3>
+<pre><code class="language-js">{{ js_file.content | e }}</code></pre>
+
+<h3>提取的 API 请求：</h3>
+{% if api_requests %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>请求类型</th>
+                <th>URL</th>
+                <th>方法</th>
+                <th>请求头</th>
+                <th>请求体</th>
+                <th>代码位置</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for api in api_requests %}
+            <tr>
+                <td>{{ api.type }}</td>
+                <td>{{ api.url }}</td>
+                <td>{{ api.method }}</td>
+                <td><pre>{{ api.headers | tojson(indent=2) }}</pre></td>
+                <td><pre>{{ api.body }}</pre></td>
+                <td>从第 {{ api.location_start_line }} 行到第 {{ api.location_end_line }} 行</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>未提取到 API 请求。</p>
+{% endif %}
+{% endblock %}

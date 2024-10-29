@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>JavaScript 文件列表</h2>
+<table class="table">
+    <a href="/jsparse/deleteall" class="button">清空js文件</a>
+    <thead>
+        <tr>
+            <th>文件路径</th>
+            <th>所属服务器</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for js_file in js_files %}
+        <tr>
+            <td>{{ js_file.path }}</td>
+            <td>{{ js_file.host if js_file.host else "未知" }}</td>
+            <td>
+                <a href="/jsparse/{{ js_file.id }}" class="button">查看详情</a>
+                <a href="/jsparse/extract/{{ js_file.id }}" class="button">提取 API 请求</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

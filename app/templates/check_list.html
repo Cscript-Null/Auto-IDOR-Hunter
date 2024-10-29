@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>ProcessedMatch 检查列表</h1>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>匹配数据</th>
+        <th>响应数量</th>
+        <th>检查结果</th>
+        <th>操作</th>
+    </tr>
+    {% for match in processed_matches %}
+    <tr>
+        <td>{{ match.id }}</td>
+        <td>{{ match.matched_data }}</td>
+        <td>{{ match.responses | length }}</td>
+        <td>
+            {% if match.is_vulnerable == 1 %}
+                <span class="vulnerable">存在漏洞</span>
+            {% elif match.is_vulnerable == 0 %}
+                <span class="safe">无漏洞</span>
+            {% else %}
+                未检查
+            {% endif %}
+        </td>
+        <td>
+            <form action="/check/{{ match.id }}" method="post">
+                <select name="method" required>
+                    <option value="">选择检查方法</option>
+                    <option value="ai">AI 检查</option>
+                    <option value="json">JSON 比较检查</option>
+                </select>
+                <button type="submit">执行检查</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<!-- 新增的一键检查表单 -->
+<h2>一键检查所有未检查的 ProcessedMatch</h2>
+<form action="/check_all" method="post">
+    <select name="method" required>
+        <option value="">选择检查方法</option>
+        <option value="ai">AI 检查</option>
+        <option value="json">JSON 比较检查</option>
+    </select>
+    <button type="submit">一键检查所有未检查的记录</button>
+</form>
+
+<a href="/">返回首页</a>
+{% endblock %}

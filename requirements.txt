@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+jinja2
+sqlalchemy
+alembic
+cryptography
+python-multipart
+requests
+esprima
+openai

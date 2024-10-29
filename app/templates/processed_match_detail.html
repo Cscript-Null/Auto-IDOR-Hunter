@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>匹配记录详情 - ID: {{ match.id }}</h1>
+
+<div>
+    <h2>匹配数据</h2>
+    <!-- 使用 <pre> 和 <code> 来显示 HTTP 格式的匹配数据 -->
+    <pre><code class="language-http">{{ match.matched_data }}</code></pre>
+</div>
+
+<div>
+    <h2>正则说明</h2>
+    <p>{{ match.pattern_description }}</p>
+</div>
+
+<div>
+    <h2>初始响应</h2>
+    <!-- 使用 <pre> 和 <code> 来显示 HTTP 格式的初始响应 -->
+    <pre><code class="language-http">{{ match.response }}</code></pre>
+</div>
+
+<div>
+    <h2>响应历史</h2>
+    {% if match.responses %}
+    <ul>
+        {% for response in match.responses %}
+        <li>
+            <strong>响应时间:</strong> {{ response.timestamp }}<br>
+            <strong>响应内容:</strong>
+            <!-- 使用 <pre> 和 <code> 来显示 HTTP 格式的响应内容 -->
+            <pre><code class="language-http">{{ response.response }}</code></pre><br>
+            <strong>Cookie 用户:</strong> 
+            {% if response.cookie_credential %}
+                {{ response.cookie_credential.user }} ({{ response.cookie_credential.permission }})
+            {% else %}
+                无
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>无历史响应</p>
+    {% endif %}
+</div>
+
+<a href="/matches/processed">返回匹配记录列表</a>
+
+<!-- Prism.js 用于语法高亮 -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-http.min.js"></script> -->
+
+{% endblock %}

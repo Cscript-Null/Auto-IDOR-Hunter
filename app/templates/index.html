@@ -1,0 +1,36 @@
+<!-- app/templates/index.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<script>
+    mermaid.initialize({ startOnLoad: true });
+</script>
+<div class="dashboard">
+    <h1>代理服务器控制面板</h1>
+    <p>欢迎来到代理服务器控制面板。您可以通过以下功能管理和控制代理服务器。</p>
+
+     <!-- 流程图 -->
+    <div class="mermaid">
+        graph TD
+        A[用户输入] --> B[代理服务器]
+        B --> C[正则初步判断]
+        B --> D[js文件处理]
+        D --> E[API数据库]
+        C --> E[API数据库]
+        E --> F[cookie管理发送]
+        F --> G[越权判断]
+
+        %% 添加点击事件
+        click B "/proxy_control" "代理服务器控制"
+        click C "/patterns" "正则表达式规则"
+        click D "/jsparse" "JS 文件处理"
+        click E "/matches" "API 数据库"
+        click F "/cookies" "Cookie 管理发送"
+        click G "/check" "越权判断"
+    </div>
+    <!-- 通知栏示例，可以根据需要动态生成 -->
+    <div class="notification">
+        操作成功！
+    </div>
+</div>
+{% endblock %}

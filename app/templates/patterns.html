@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>正则表达式模式列表</h1>
+
+<!-- 如果有错误信息，显示错误 -->
+{% if error %}
+<p style="color: red;">{{ error }}</p>
+{% endif %}
+
+<!-- 显示所有的 patterns -->
+<table>
+    <thead>
+        <tr>
+            <th>正则表达式</th>
+            <th>描述</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for pattern in patterns %}
+        <tr>
+            <td>{{ pattern.pattern }}</td>
+            <td>{{ pattern.description }}</td>
+            <td>
+                <!-- 编辑按钮 -->
+                <a href="/patterns/edit/{{ pattern.id }}">编辑</a>
+                <!-- 删除按钮 -->
+                <form method="post" action="/patterns/delete/{{ pattern.id }}" style="display:inline;">
+                    <button type="submit" onclick="return confirm('确定要删除这个正则表达式吗？')">删除</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- 添加新的 pattern -->
+<h2>添加新正则表达式模式</h2>
+<form method="post" action="/patterns/add">
+    <label for="pattern">正则表达式:</label>
+    <input type="text" id="pattern" name="pattern" required>
+    
+    <label for="description">描述:</label>
+    <input type="text" id="description" name="description" required>
+    
+    <button type="submit">添加</button>
+</form>
+
+<a href="/matches/processed">返回匹配记录列表</a>
+
+{% endblock %}

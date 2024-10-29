@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>编辑正则表达式模式 - ID: {{ pattern.id }}</h1>
+
+<!-- 如果有错误信息，显示错误 -->
+{% if error %}
+<p style="color: red;">{{ error }}</p>
+{% endif %}
+
+<!-- 编辑表单 -->
+<form method="post" action="/patterns/edit/{{ pattern.id }}" class="pattern-form">
+    <label for="pattern">正则表达式:</label>
+    <input type="text" id="pattern" name="pattern" value="{{ pattern.pattern }}" required placeholder="输入正则表达式">
+    
+    <label for="description">描述:</label>
+    <input type="text" id="description" name="description" value="{{ pattern.description }}" required placeholder="输入描述">
+    
+    <button type="submit" class="button save-button">保存</button>
+</form>
+
+<!-- 正则表达式解析和预览 -->
+<h2>正则表达式预览</h2>
+<label for="test-string">测试字符串:</label>
+<input type="text" id="test-string" placeholder="输入要匹配的字符串">
+<p>匹配结果:</p>
+<pre id="match-result">匹配结果将在此显示</pre>
+
+<h2>正则表达式解析</h2>
+<p>正则表达式的组成部分:</p>
+<pre id="regex-info">正则表达式解析将在此显示</pre>
+
+<a href="/patterns" class="button back-button">取消</a>
+
+{% endblock %}
+
+<!-- JavaScript 实现正则表达式解析和实时预览 -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const patternInput = document.getElementById('pattern');
+    const testStringInput = document.getElementById('test-string');
+    const matchResult = document.getElementById('match-result');
+    const regexInfo = document.getElementById('regex-info');
+
+    // 监听正则表达式和测试字符串的输入事件
+    patternInput.addEventListener('input', updateRegexPreview);
+    testStringInput.addEventListener('input', updateRegexPreview);
+
+    function updateRegexPreview() {
+        const pattern = patternInput.value;
+        const testString = testStringInput.value;
+
+        try {
+            // 创建正则表达式对象
+            const regex = new RegExp(pattern);
+            
+            // 进行匹配
+            const result = testString.match(regex);
+            matchResult.textContent = result ? result.join(', ') : '无匹配';
+
+            // 解析正则表达式
+            regexInfo.textContent = parseRegex(pattern);
+        } catch (e) {
+            matchResult.textContent = '正则表达式无效';
+            regexInfo.textContent = '无法解析正则表达式';
+        }
+    }
+
+    // 简单解析正则表达式的组成部分
+    function parseRegex(regex) {
+        const parts = [];
+        const regexComponents = [
+            { name: '字符类', pattern: /\[.*?\]/g },
+            { name: '捕获组', pattern: /\(.*?\)/g },
+            { name: '量词', pattern: /\{.*?\}/g },
+            { name: '特殊字符', pattern: /\\./g }
+        ];
+
+        regexComponents.forEach(component => {
+            const matches = regex.match(component.pattern);
+            if (matches) {
+                parts.push(`${component.name}: ${matches.join(', ')}`);
+            }
+        });
+
+        return parts.length > 0 ? parts.join('\n') : '无解析结果';
+    }
+});
+</script>
+
+<!-- CSS 样式 -->
+<style>
+.pattern-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+}
+.pattern-form input {
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.button {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 1rem;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.save-button {
+    background-color: #4CAF50;
+    color: white;
+}
+.back-button {
+    background-color: #555555;
+    color: white;
+    text-decoration: none;
+}
+pre {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+</style>
